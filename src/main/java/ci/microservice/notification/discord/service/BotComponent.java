@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,11 +19,16 @@ import java.util.stream.Collectors;
 
 @Component
 public class BotComponent implements CommandLineRunner {
-    private String Token1 = "NzEwNzg1NjExMDk5MDEzMTMw.";
 
-    private String Token = Token1 +  "Xvdbjg.Pt6qty5Aj9M5oF1XZ0D5_g2aNVI";
+    @Value("${microservice.notification.discord.token}")
+    private String discordToken;
 
-    private final DiscordApi api = new DiscordApiBuilder().setToken(Token).login().join();
+    private DiscordApi api;
+
+    @PostConstruct
+    public void init() {
+        api = new DiscordApiBuilder().setToken(discordToken).login().join();
+    }
 
     @Autowired
     private DiscordService discordService;
@@ -91,6 +97,7 @@ public class BotComponent implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         api.addMessageCreateListener(event -> {
+
             if(event.getChannel().getMessagesAfterAsStream(event.getMessage()).count() > 0) return;
 
             String msg = event.getMessageContent();
