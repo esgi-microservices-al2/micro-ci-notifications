@@ -8,26 +8,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Project
-      uses: actions/checkout@v1
-
-    # Add your build steps here
-    - name:
-      context: .
-      dockerfile: ./../../Dockerfiles
-    - ports:
-      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
-    restart: always
-    environment:
-      - TOKENACL=${TOKENACL}
-      - DiscordToken=${DiscordToken}
-      - NotificationSiteUrl=${NotificationSiteUrl}
-      - CONSUL_PORT=${CONSUL_PORT}
-      - CONSUL_HOST=${CONSUL_HOST}
-      - APPLICATION_PORT=${APPLICATION_PORT}
+    - uses: actions/checkout@v1
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.11
+    - name: Maven Package
+      run: mvn -B clean package -DskipTests
+    - name: Maven Verify
+      run: mvn -B clean verify
 
   # Uncomment and replace {userName} by your account folder name
-   deploy:
+  deploy:
      name: Build/Publish Docker Images to DockerHub & Deploy to Azure VM
      runs-on: ubuntu-latest
      if: github.ref == 'refs/heads/master'
@@ -53,4 +45,11 @@ jobs:
        uses: azure/CLI@v1
        with:
          inlineScript: |
-           az vm run-command invoke -g ${{ secrets.AZURE_RESOURCE_GRP }} -n ${{ secrets.AZURE_VM }} --command-id RunShellScript --scripts "cd /home/{userName} && wget -q https://raw.githubusercontent.com/esgi-microservices-al2/micro-ci-notifications/master/.github/azure/docker-compose.yml -O docker-compose.yml && docker-compose stop && docker-compose rm && docker-compose up -d"
+            az vm run-command invoke -g ${{ secrets.AZURE_RESOURCE_GRP }} -n ${{ secrets.AZURE_VM }} --command-id RunShellScript --scripts \
+            "cd /home/moxa/Bureau/micro-services/micro-ci-notifications && \ 
+            wget -q https://raw.githubusercontent.com/esgi-microservices-al2/micro-ci-notifications/master/.github/azure/docker-compose.yml -O docker-compose.yml && \ 
+            docker-compose pull microservice-notifications && \
+            docker-compose rm -s -f && \
+            docker-compose up -d && \
+            docker image prune -f --filter "label=MICROSERVICE_NAME=notifications" "
+                 
