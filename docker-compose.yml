@@ -1,24 +1,14 @@
-version: '3.7'
-
+version: "2"
 services:
-  rabbitmq-ms:
-    image: rabbitmq:3-management
-    container_name: rabbitmq_microservice
-    volumes:
-      - rabbitmq:/var/lib/rabbitmq
-    restart: always
+  image-test:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     environment:
-      - TCP_PORTS=15672, 5672
-      - RABBITMQ_CONFIG_FILE=/etc/rabbitmq/rabbitmq-test
-      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log [{console,[{level,debug}]}]
-    ports:
-      - 15672:15672
-      - 5672:5672
-    labels:
-      com.datadoghq.ad.check_names: '["rabbitmq"]'
-      com.datadoghq.ad.instances: '[{"rabbitmq_api_url": "http://%%host%%:15672/api/","username": "guest", "password":"guest"}]'
-      com.datadoghq.ad.logs: '[{"source": "rabbitmq", "service": "rabbitmq-ms"}]'
+      - TOKENACL=${TOKENACL}
+      - DiscordToken=${DiscordToken}
+      - NotificationSiteUrl=${NotificationSiteUrl}
+      - CONSUL_PORT=${CONSUL_PORT}
+      - CONSUL_HOST=${CONSUL_HOST}
+      - APPLICATION_PORT=${APPLICATION_PORT}
 
-volumes:
-  rabbitmq:
-    driver: local

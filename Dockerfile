@@ -4,6 +4,7 @@
 FROM maven:3-jdk-11
  
 ADD . /cxfbootsimple
+
 WORKDIR /cxfbootsimple
  
 # Just echo so we can see, if everything is there :)
@@ -26,5 +27,5 @@ VOLUME /tmp
 
 COPY --from=0 /cxfbootsimple/target/notification-*-SNAPSHOT.jar /usr/local/lib/app.jar
 
-EXPOSE 8080
+EXPOSE 8187
 ENTRYPOINT ["java","-jar","/usr/local/lib/app.jar"]
