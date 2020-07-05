@@ -1,3 +1,19 @@
 version: '3'
-
-# Add your networks/volumes/services for your microservice
+services:
+    microservice-notification:
+        image: esgimicroci/al2-notifications:latest
+        restart: always
+        ports:
+            - "8187:8187"
+        environment:
+          - TOKENACL=${TOKENACL}
+          - DiscordToken=${DiscordToken}
+          - NotificationSiteUrl=${NotificationSiteUrl}
+          - CONSUL_PORT=${CONSUL_PORT}
+          - CONSUL_HOST=${CONSUL_HOST}
+          - APPLICATION_PORT=${APPLICATION_PORT}
+          - NOTIFICATION_RABBITMQ_HOST=${NOTIFICATION_RABBITMQ_HOST}
+          - NOTIFICATION_RABBITMQ_PORT=${NOTIFICATION_RABBITMQ_PORT} 
+          - NOTIFICATION_RABBITMQ_USERNAME=${NOTIFICATION_RABBITMQ_USERNAME}
+          - NOTIFICATION_RABBITMQ_PASSWORD=${NOTIFICATION_RABBITMQ_PASSWORD}
+          - MONGO_CONNECTION=${MONGO_CONNECTION}
