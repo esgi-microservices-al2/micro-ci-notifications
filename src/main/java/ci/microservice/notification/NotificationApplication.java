@@ -5,9 +5,7 @@ import ci.microservice.notification.adresseMail.models.AdresseMail;
 
 import ci.microservice.notification.discord.models.DiscordRequest;
 import ci.microservice.notification.discord.repository.DiscordRepository;
-import ci.microservice.notification.job.Runner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
