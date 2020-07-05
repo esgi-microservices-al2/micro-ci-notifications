@@ -1,5 +1,6 @@
 package ci.microservice.notification.discord.service;
 
+import ci.microservice.notification.amqp.EventModel;
 import ci.microservice.notification.discord.models.DiscordRequest;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -45,12 +46,19 @@ public class BotComponent implements CommandLineRunner {
         return discordService.getAllRequest().size();
     }
 
-    public void notify(String buildId){
-        List<DiscordRequest> l = new ArrayList<DiscordRequest>(discordService.getAllRequest());
-        if(l.size() == 0) return;
-        l = l.stream().filter(a->a.getId().split("-")[1].equals(buildId)).collect(Collectors.toList());
-        l.forEach(a->sendMessageOnChannel(a.getId().split("-")[0], "Build : " + a.getId().split("-")[1] + " finalisé"));
+    private void notify(String buildId, String message){
+        List<DiscordRequest> discordRequest = new ArrayList<DiscordRequest>(discordService.getAllRequest());
+        if(discordRequest.size() == 0) return;
+        discordRequest = discordRequest.stream().filter(a->a.getId().split("-")[1].equals(buildId)).collect(Collectors.toList());
+        discordRequest.forEach(a->sendMessageOnChannel(a.getId().split("-")[0], message));
+    }
 
+    public void notify(final EventModel eventModel){
+        String buildMessage = "Le Build : " + eventModel.getProjectId() + " / "  + eventModel.getTest()
+                + " / " + eventModel.getType()
+                + " / " + eventModel.getDate()
+                + " / " + eventModel.getBuild() + " \n Finalisé !";
+        notify(eventModel.getProjectId(), buildMessage);
     }
 
     private void sendMessageOnChannel(String channelId, Message msg){
