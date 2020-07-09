@@ -41,6 +41,7 @@ public class Sender {
                 ".<br>Best regards,<br><br><strong>The micro-service notification team</strong></font>";
         System.out.print("emailBodyForBuildStatus*************************" + eventModel.getBuild());
         logger.info("sending message to email address : " + emailTo + " in process ...");
+
         MimeMessage messenge = javaMailSender.createMimeMessage();
         MimeMessageHelper sendMail = new MimeMessageHelper(messenge, true, "UTF-8");
         sendMail.setTo(emailTo.split(";"));
@@ -48,6 +49,7 @@ public class Sender {
         sendMail.setSubject(emailSubjectForEstimatedNavs);
         sendMail.setText(emailBodyForBuildStatus, true);
         javaMailSender.send(messenge);
+
         logger.info("The message was sent succesfully to : " + emailTo);
     }
 }

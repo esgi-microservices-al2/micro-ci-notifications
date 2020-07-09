@@ -20,7 +20,6 @@ public class DiscordController {
     @GetMapping("/ttt")
     @ResponseBody
     public String getFoos(@RequestParam String buildId) {
-        botComponent.notify(buildId);
         return "hi";
     }
 
