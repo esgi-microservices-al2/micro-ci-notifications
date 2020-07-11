@@ -52,5 +52,5 @@ public class Recieve {
         logger.info("Finish to export the build status");
     }
 
-    }
 }
+
