@@ -4,6 +4,7 @@ import ci.microservice.notification.adresseMail.models.AdresseMail;
 import ci.microservice.notification.adresseMail.services.AdresseMailService;
 import ci.microservice.notification.amqp.AmqpConfig;
 import ci.microservice.notification.amqp.EventModel;
+import ci.microservice.notification.discord.service.BotComponent;
 import ci.microservice.notification.utils.Sender;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.logging.Logger;
@@ -29,6 +30,8 @@ public class Recieve {
     private String emailBuildStatusTo; // mail to
     @Resource
     private Sender sender;
+    @Autowired
+    BotComponent botComponent;
 
 //    public void run(ApplicationArguments args) throws Exception {
 //        logger.info("The beginning to launch the job");
@@ -42,8 +45,12 @@ public class Recieve {
         logger.info("The beginning to export the build status");
         for (int i = 0; i < mails.size(); i++){
             sender.sendMail(mails.get(i).getAdresse(), "Build status",eventModel);
-            logger.info("Finish to export the build status");
+            //logger.info("Finish to export the build status");
         }
+        //sender.sendMail(emailBuildStatusTo, "Build status",eventModel);
+        botComponent.notify(eventModel);
+        logger.info("Finish to export the build status");
+    }
 
     }
 }
