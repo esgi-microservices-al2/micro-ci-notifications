@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 
 public class AmqpConfig {
-    public static final String QUEUE_NAME = "al2.notification0.queue";
+    public static final String QUEUE_NAME = "al2.notification.queue";
 
     @Bean
     Queue queue() {

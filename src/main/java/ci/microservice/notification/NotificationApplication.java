@@ -23,7 +23,7 @@ import java.util.List;
 
 @SpringBootApplication
 @Configuration
-public class NotificationApplication implements CommandLineRunner{
+public class NotificationApplication implements CommandLineRunner {
     @Autowired
     AdresseMailRepository adresseMailRepository;
 
@@ -36,12 +36,12 @@ public class NotificationApplication implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
-        adresseMailRepository.deleteAll();
-        adresseMailRepository.saveAll(
-                List.of(
-                        new AdresseMail("mouna89@gmail.com")
-                )
-        );
+//        adresseMailRepository.deleteAll();
+//        adresseMailRepository.saveAll(
+//                List.of(
+//                        new AdresseMail("mouna89@gmail.com")
+//                )
+//        );
 
         discordRepository.deleteAll();
         discordRepository.saveAll(
