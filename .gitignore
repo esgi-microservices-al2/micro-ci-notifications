@@ -27,5 +27,7 @@ target/
 /.nb-gradle/
 build/
 
+#### ENV ####
+.env
 ### VS Code ###
 .vscode/
