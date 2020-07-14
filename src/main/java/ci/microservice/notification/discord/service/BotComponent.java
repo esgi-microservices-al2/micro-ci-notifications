@@ -60,7 +60,6 @@ public class BotComponent implements CommandLineRunner {
         discordRequest.forEach(a->sendMessageOnChannel(a.getId().split("-")[0], message));
     }
 
-    @RabbitListener(queues = AmqpConfig.QUEUE_NAME)
     public void notify(final EventModel eventModel){
         String buildMessage = "Le Build : " + eventModel.getProjectId() + " / "  + eventModel.getTest()
                 + " / " + eventModel.getType()

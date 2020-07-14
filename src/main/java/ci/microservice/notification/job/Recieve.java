@@ -41,6 +41,14 @@ public class Recieve {
 
     @RabbitListener(queues = AmqpConfig.QUEUE_NAME)
     public void exportDetailsOfBuild(final EventModel eventModel) throws MessagingException {
+        String buildMessage = "Le Build : " + eventModel.getProjectId() + " / "  + eventModel.getTest()
+                + " / " + eventModel.getType()
+                + " / " + eventModel.getDate()
+                + " / " + eventModel.getBuild() + " \n Finalisé !";
+
+        System.out.println(buildMessage);
+
+
         List<AdresseMail> mails = adresseMailService.getAdressesMail();
         logger.info("The beginning to export the build status");
         for (int i = 0; i < mails.size(); i++){
@@ -50,6 +58,8 @@ public class Recieve {
         //sender.sendMail(emailBuildStatusTo, "Build status",eventModel);
         botComponent.notify(eventModel);
         logger.info("Finish to export the build status");
+
+
     }
 
 }
