@@ -1,15 +1,19 @@
 package ci.microservice.notification.discord.service;
 
+import ci.microservice.notification.amqp.AmqpConfig;
 import ci.microservice.notification.amqp.EventModel;
 import ci.microservice.notification.discord.models.DiscordRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -19,6 +23,8 @@ import java.util.stream.Collectors;
 
 
 @Component
+@Service
+@Slf4j
 public class BotComponent implements CommandLineRunner {
 
     @Value("${microservice.notification.discord.token}")
@@ -46,6 +52,7 @@ public class BotComponent implements CommandLineRunner {
         return discordService.getAllRequest().size();
     }
 
+
     private void notify(String buildId, String message){
         List<DiscordRequest> discordRequest = new ArrayList<DiscordRequest>(discordService.getAllRequest());
         if(discordRequest.size() == 0) return;
@@ -53,6 +60,7 @@ public class BotComponent implements CommandLineRunner {
         discordRequest.forEach(a->sendMessageOnChannel(a.getId().split("-")[0], message));
     }
 
+    @RabbitListener(queues = AmqpConfig.QUEUE_NAME)
     public void notify(final EventModel eventModel){
         String buildMessage = "Le Build : " + eventModel.getProjectId() + " / "  + eventModel.getTest()
                 + " / " + eventModel.getType()
