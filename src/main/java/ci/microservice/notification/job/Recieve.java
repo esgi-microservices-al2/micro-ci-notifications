@@ -55,12 +55,12 @@ public class Recieve {
 
         List<AdresseMail> mails = adresseMailService.getAdressesMail();
         logger.info("The beginning to export the build status");
-        /*for (int i = 0; i < mails.size(); i++){
+        for (int i = 0; i < mails.size(); i++){
             sender.sendMail(mails.get(i).getAdresse(), "Build status",eventModel);
             //logger.info("Finish to export the build status");
         }
         //sender.sendMail(emailBuildStatusTo, "Build status",eventModel);
-        botComponent.notify(eventModel);*/
+        botComponent.notify(eventModel);
 
         logger.info("Finish to export the build status");
 
